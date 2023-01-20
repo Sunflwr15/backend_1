@@ -1,39 +1,33 @@
-const port = 1505;
+require('dotenv').config()
+const port = process.env.PORT || 1230;
 const host = "localhost";
-const exp = require("./hello.js");
-const http = require("http");
+const express = require("express");
 const moment = require("moment");
 const dayjs = require("dayjs");
-const server = http.createServer((req, res) => {
-  const url = req.url;
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  if (url === "/") {
-    res.write(
-      JSON.stringify({
-        status: 200,
-        response: {
-          saying: exp.greet,
-        },
-      })
-    );
-  }
-  if (url === "/dayjs") {
-    res.write(
-      JSON.stringify({
-        status: 200,
-        response: {
-          dayJS: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-        },
-      })
-    );
-  }
-  res.end();
-});
-//   .listen(port, host, () => {
-//       console.log(`Server Running at http://${host}:${port}`);
-//   });
+const router = require("./src/router");
+const log = require("./src/middleware/log");
+const notFound = require("./src/middleware/404");
+const errorHandling = require("./src/middleware/errorHandling");
+const auth = require("./src/middleware/auth");
+const md1 = require("./src/middleware/mid1");
+const multer = require("multer");
+const uploadmultifile = require("./src/storage/multifileupload");
+const uploadsinglefile = require("./src/storage/fileuploadsingle");
+const app = express();
 
-server.listen(port, host, () => {
+console.log(process.env.DB_USERNAME_DEV);
+
+app.use(express.json());
+// apse(auth)
+// app.use(uploadmultifile)
+// app.use(uploadsinglefile)
+app.use(express.static("storage/upload"))
+app.use(md1);
+app.use(log);
+app.use(router);
+app.use(notFound);
+app.use(errorHandling);
+
+app.listen(port, host, () => {
   console.log(`Server is Running at http://${host}:${port}`);
 });
