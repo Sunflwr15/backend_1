@@ -1,21 +1,21 @@
 const userModel = require("../models").users;
-const forgotPasswordModel = require("../models").password;
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const dayjs = require("dayjs");
 const jwt = require("jsonwebtoken");
 const { sendEmail } = require("../mail");
 require("dotenv").config;
+
 async function register(req, res) {
   try {
     const payload = req.body;
-    const { name, email, password } = payload;
+    const { name, email, password, role } = payload;
     // let hashPassword = await bcrypt.hashSync(password, 10);
     await userModel.create({
       name,
       email,
-      //   password: hashPassword,
       password,
+      role
     });
     res.json({
       status: "Success",
