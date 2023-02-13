@@ -1,0 +1,16 @@
+###
+GET http://localhost:1500/user/list
+
+###
+
+POST http://localhost:5000/product
+
+Content-Type: application/json
+
+{
+    "nama": "ter",
+    "harga": "3000",
+    "stok": 30,
+    "deskripsi": "lorem",
+    "lokasi": "Jakarta"
+}
